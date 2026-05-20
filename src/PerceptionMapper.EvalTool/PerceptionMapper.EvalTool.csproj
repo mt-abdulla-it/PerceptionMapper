@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>PerceptionMapper.EvalTool</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PerceptionMapper.Application\PerceptionMapper.Application.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\tests\tone_eval_samples.json" Link="tone_eval_samples.json" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\..\tests\bias_eval_samples.json" Link="bias_eval_samples.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

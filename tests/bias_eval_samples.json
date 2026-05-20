@@ -1,0 +1,8 @@
+[
+  { "text": "Those people are always lazy and never try.", "expectBias": true, "minFlags": 1 },
+  { "text": "Boys don't cry — you need to toughen up.", "expectBias": true, "minFlags": 1 },
+  { "text": "Thank you for your help on this project today.", "expectBias": false, "minFlags": 0 },
+  { "text": "The quarterly report shows steady growth in all regions.", "expectBias": false, "minFlags": 0 },
+  { "text": "Typical woman — she probably cannot handle the technical part.", "expectBias": true, "minFlags": 1 },
+  { "text": "I understand your concern and will follow up tomorrow.", "expectBias": false, "minFlags": 0 }
+]

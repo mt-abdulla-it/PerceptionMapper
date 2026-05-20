@@ -1,0 +1,688 @@
+<Window x:Class="PerceptionMapper.Desktop.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Perception Mapper — Communication Practice Platform"
+        Height="940" Width="1200"
+        MinHeight="720" MinWidth="980"
+        WindowStartupLocation="CenterScreen"
+        Background="{StaticResource BackgroundBrush}"
+        UseLayoutRounding="True"
+        SnapsToDevicePixels="True"
+        TextOptions.TextFormattingMode="Display"
+        TextOptions.TextRenderingMode="ClearType"
+        Closed="Window_Closed">
+
+    <Window.Resources>
+        <!-- ── Spacing constants ── -->
+        <Thickness x:Key="PageMargin">22,18,22,14</Thickness>
+        <Thickness x:Key="CardPadding">20,16</Thickness>
+        <Thickness x:Key="SectionGap">0,0,0,14</Thickness>
+        <Thickness x:Key="RowGap">0,0,0,10</Thickness>
+        <Thickness x:Key="InlineGap">0,0,10,0</Thickness>
+        <CornerRadius x:Key="CardRadius">10</CornerRadius>
+        <CornerRadius x:Key="BadgeRadius">20</CornerRadius>
+        <CornerRadius x:Key="InputRadius">8</CornerRadius>
+    </Window.Resources>
+
+    <DockPanel>
+
+        <!-- ═══════════════════════════════════════════
+             TOP APP BAR
+        ════════════════════════════════════════════ -->
+        <Border DockPanel.Dock="Top"
+                Background="{StaticResource PrimaryBrush}"
+                Padding="22,14">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Brand -->
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <Border Width="42" Height="42" CornerRadius="11"
+                            Background="{StaticResource AccentBrush}"
+                            Margin="0,0,14,0"
+                            ToolTip="Perception Mapper">
+                        <TextBlock Text="PM" Foreground="White" FontWeight="Bold" FontSize="15"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock Text="Perception Mapper"
+                                   FontSize="18" FontWeight="Bold" Foreground="White"
+                                   AutomationProperties.Name="Perception Mapper application title"/>
+                        <TextBlock Text="Mars Tech Campus · Communication Practice"
+                                   FontSize="11" Foreground="#94A3B8" Margin="0,3,0,0"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <!-- Nav -->
+                <StackPanel Grid.Column="1" Orientation="Horizontal"
+                            VerticalAlignment="Center">
+
+                    <!-- API status pill -->
+                    <Border Background="#0F2D45" BorderBrush="#334E68"
+                            BorderThickness="1" CornerRadius="20" Padding="12,6"
+                            Margin="0,0,8,0"
+                            ToolTip="Live API connection status">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <Ellipse x:Name="ApiStatusDot"
+                                     Width="9" Height="9" Fill="#94A3B8" Margin="0,0,7,0"/>
+                            <TextBlock x:Name="ApiStatusLabel"
+                                       Text="Checking API…" Foreground="#CBD5E1"
+                                       FontSize="12" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Welcome pill -->
+                    <Border Background="#163D5C" BorderBrush="#38BDF8"
+                            BorderThickness="1" CornerRadius="20" Padding="14,6"
+                            Margin="0,0,8,0">
+                        <TextBlock x:Name="WelcomeText"
+                                   Foreground="#E0F2FE" FontSize="13" FontWeight="SemiBold"
+                                   VerticalAlignment="Center"/>
+                    </Border>
+
+                    <Button Content="About"
+                            Style="{StaticResource NavBarButton}"
+                            Margin="0,0,8,0"
+                            AutomationProperties.Name="About this application"
+                            Click="About_Click"/>
+                    <Button Content="Logout"
+                            Style="{StaticResource NavBarLogoutButton}"
+                            AutomationProperties.Name="Log out of the application"
+                            Click="Logout_Click"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- ═══════════════════════════════════════════
+             FOOTER
+        ════════════════════════════════════════════ -->
+        <Border DockPanel.Dock="Bottom"
+                Background="{StaticResource CardBrush}"
+                BorderBrush="{StaticResource BorderBrush}"
+                BorderThickness="0,1,0,0"
+                Padding="22,10">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock FontSize="12" Foreground="{StaticResource MutedBrush}"
+                           VerticalAlignment="Center" TextWrapping="Wrap">
+                    <Run FontWeight="SemiBold" Foreground="{StaticResource TextBrush}">Suwedha</Run>
+                    <Run> — Software Idea Planner (Concept &amp; Planning)  ·  </Run>
+                    <Run FontWeight="SemiBold" Foreground="{StaticResource TextBrush}">Abdullah</Run>
+                    <Run> — Software Developer (Development &amp; Execution)</Run>
+                </TextBlock>
+
+                <TextBlock Grid.Column="1"
+                           Text="Mars Tech Campus"
+                           FontSize="11" FontWeight="SemiBold"
+                           Foreground="{StaticResource AccentBrush}"
+                           VerticalAlignment="Center"/>
+            </Grid>
+        </Border>
+
+        <!-- ═══════════════════════════════════════════
+             MAIN CONTENT
+        ════════════════════════════════════════════ -->
+        <ScrollViewer VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Disabled">
+            <Grid Margin="{StaticResource PageMargin}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <!-- Demo banner       -->
+                    <RowDefinition Height="Auto"/>
+                    <!-- Offline banner    -->
+                    <RowDefinition Height="Auto"/>
+                    <!-- Dashboard strip   -->
+                    <RowDefinition Height="Auto"/>
+                    <!-- Session setup     -->
+                    <RowDefinition Height="500"/>
+                    <!-- Workspace         -->
+                    <RowDefinition Height="Auto"/>
+                    <!-- History tabs      -->
+                </Grid.RowDefinitions>
+
+                <!-- ── Demo banner ── -->
+                <Border Grid.Row="0"
+                        CornerRadius="{StaticResource CardRadius}"
+                        Padding="14,10"
+                        Margin="{StaticResource SectionGap}">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                            <GradientStop Color="#E0F2FE" Offset="0"/>
+                            <GradientStop Color="#F0FDFA" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Border.Background>
+                    <TextBlock TextWrapping="Wrap" FontSize="13"
+                               Foreground="{StaticResource PrimaryBrush}" LineHeight="22">
+                        <Run Text="Demo mode: " FontWeight="Bold"/>
+                        <Run Text="Choose a scenario, practise with voice or text, then review your communication score, bias flags, and saved sessions."/>
+                    </TextBlock>
+                </Border>
+
+                <!-- ── Offline banner (hidden until needed) ── -->
+                <Border x:Name="OfflineBanner"
+                        Grid.Row="1"
+                        Background="#EFF6FF" BorderBrush="#93C5FD"
+                        BorderThickness="1" CornerRadius="{StaticResource CardRadius}"
+                        Padding="14,10" Margin="{StaticResource SectionGap}"
+                        Visibility="Collapsed">
+                    <TextBlock x:Name="OfflineBannerText"
+                               TextWrapping="Wrap" Foreground="#1E40AF" FontSize="12"/>
+                </Border>
+
+                <!-- ── Dashboard strip ── -->
+                <Border Grid.Row="2"
+                        Style="{StaticResource CardBorder}"
+                        Padding="{StaticResource CardPadding}"
+                        Margin="{StaticResource SectionGap}">
+                    <StackPanel>
+                        <TextBlock Text="Your progress"
+                                   FontSize="14" FontWeight="Bold"
+                                   Foreground="{StaticResource PrimaryBrush}"
+                                   Margin="0,0,0,8"/>
+                        <TextBlock x:Name="DashboardText"
+                                   TextWrapping="Wrap"
+                                   Style="{StaticResource BodyText}"
+                                   FontWeight="SemiBold"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- ════════════════════════════════════
+                     SESSION SETUP CARD
+                ════════════════════════════════════ -->
+                <Border Grid.Row="3"
+                        Style="{StaticResource CardBorder}"
+                        Padding="{StaticResource CardPadding}"
+                        Margin="{StaticResource SectionGap}">
+                    <StackPanel>
+
+                        <TextBlock Text="Session setup"
+                                   FontSize="15" FontWeight="Bold"
+                                   Foreground="{StaticResource PrimaryBrush}"
+                                   Margin="0,0,0,14"/>
+
+                        <!-- Controls row -->
+                        <WrapPanel Margin="0,0,0,12" ItemWidth="Auto">
+
+                            <StackPanel Margin="0,0,20,10">
+                                <TextBlock Text="Practice scenario"
+                                           Style="{StaticResource CaptionText}" Margin="0,0,0,5"/>
+                                <ComboBox x:Name="ScenarioCombo"
+                                          Style="{StaticResource ModernComboBox}"
+                                          Width="208"
+                                          AutomationProperties.LabeledBy="{Binding ElementName=ScenarioLabel}"
+                                          ToolTip="Select the communication scenario to practise"/>
+                            </StackPanel>
+
+                            <StackPanel Margin="0,0,20,10">
+                                <TextBlock Text="Input message mood"
+                                           Style="{StaticResource CaptionText}" Margin="0,0,0,5"
+                                           ToolTip="How you intend this message to come across. Analysis still detects tone from your actual words and voice."/>
+                                <ComboBox x:Name="InputMoodCombo"
+                                          Style="{StaticResource ModernComboBox}"
+                                          Width="172"
+                                          ToolTip="Intended mood of your message"/>
+                            </StackPanel>
+
+                            <StackPanel Margin="0,0,20,10">
+                                <TextBlock Text="Output mood (rephrase target)"
+                                           Style="{StaticResource CaptionText}" Margin="0,0,0,5"
+                                           ToolTip="Tone used for scenario rewrites and coaching suggestions below."/>
+                                <ComboBox x:Name="OutputMoodCombo"
+                                          Style="{StaticResource ModernComboBox}"
+                                          Width="196"
+                                          ToolTip="Target tone for rephrased output"/>
+                            </StackPanel>
+
+                            <StackPanel Margin="0,0,20,10">
+                                <TextBlock Text="Speak in"
+                                           Style="{StaticResource CaptionText}" Margin="0,0,0,5"/>
+                                <ComboBox x:Name="VoiceLanguageCombo"
+                                          Style="{StaticResource ModernComboBox}"
+                                          Width="136"
+                                          ToolTip="Language for voice recognition and TTS"/>
+                            </StackPanel>
+
+                            <!-- Toggles -->
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" Margin="0,0,0,10">
+                                <CheckBox x:Name="VoiceOnlyModeCheck"
+                                          Content="Voice-only"
+                                          Margin="0,0,16,0"
+                                          ToolTip="Hides the text input panel — practice with voice only"
+                                          Checked="VoiceOnlyMode_Changed"
+                                          Unchecked="VoiceOnlyMode_Changed"/>
+                                <CheckBox x:Name="AutoSpeakCheck"
+                                          Content="Read aloud"
+                                          Margin="0,0,16,0"
+                                          IsChecked="True"
+                                          ToolTip="AI responses are read aloud via TTS"/>
+                                <CheckBox x:Name="LiveCoachCheck"
+                                          Content="Live coach"
+                                          IsChecked="True"
+                                          ToolTip="Display real-time coaching moments while you speak"/>
+                            </StackPanel>
+                        </WrapPanel>
+
+                        <!-- Action buttons -->
+                        <WrapPanel Margin="0,0,0,12">
+                            <Button x:Name="VoiceOnlyStartButton"
+                                    Content="▶  Speak now"
+                                    Style="{StaticResource SuccessButton}"
+                                    Margin="{StaticResource InlineGap}"
+                                    AutomationProperties.Name="Start voice-only session"
+                                    Click="VoiceOnlyStart_Click"/>
+                            <Button x:Name="ListenButton"
+                                    Content="🎤  Listen"
+                                    Style="{StaticResource DangerButton}"
+                                    Margin="{StaticResource InlineGap}"
+                                    AutomationProperties.Name="Start microphone recording"
+                                    Click="Listen_Click"/>
+                            <Button x:Name="StopListenButton"
+                                    Content="⏹  Stop"
+                                    Style="{StaticResource GhostButton}"
+                                    Margin="{StaticResource InlineGap}"
+                                    IsEnabled="False"
+                                    AutomationProperties.Name="Stop microphone recording"
+                                    Click="StopListen_Click"/>
+                            <Button Content="Analyze voice"
+                                    Style="{StaticResource SecondaryButton}"
+                                    Margin="{StaticResource InlineGap}"
+                                    ToolTip="Run communication analysis on captured voice transcript"
+                                    Click="AnalyzeVoice_Click"/>
+                            <Button Content="Export report"
+                                    Style="{StaticResource GhostButton}"
+                                    Margin="{StaticResource InlineGap}"
+                                    ToolTip="Save the current analysis as a PDF/text report"
+                                    Click="ExportReport_Click"/>
+                            <Button Content="Mic settings"
+                                    Style="{StaticResource GhostButton}"
+                                    Margin="0,0,0,8"
+                                    ToolTip="Open microphone and audio settings"
+                                    Click="OpenMicSettings_Click"/>
+                        </WrapPanel>
+
+                        <!-- Status labels -->
+                        <TextBlock x:Name="ScenarioTipText"
+                                   Style="{StaticResource BodyText}"
+                                   TextWrapping="Wrap" Margin="0,0,0,6"/>
+
+                        <TextBlock x:Name="VoiceStatusText"
+                                   Style="{StaticResource BodyText}"
+                                   TextWrapping="Wrap" Margin="0,0,0,6"/>
+
+                        <TextBlock x:Name="HeardTextLabel"
+                                   FontWeight="SemiBold" Foreground="{StaticResource AccentBrush}"
+                                   TextWrapping="Wrap" Visibility="Collapsed"
+                                   Margin="0,0,0,10"/>
+
+                        <!-- Live coach feed -->
+                        <Border Background="#F8FAFC" CornerRadius="{StaticResource InputRadius}"
+                                BorderBrush="{StaticResource BorderBrush}" BorderThickness="1"
+                                Padding="12,10" MinHeight="88">
+                            <DockPanel LastChildFill="True">
+                                <TextBlock DockPanel.Dock="Top"
+                                           Text="Live coach feed"
+                                           FontWeight="SemiBold" FontSize="12"
+                                           Foreground="{StaticResource MutedBrush}"
+                                           Margin="0,0,0,6"/>
+                                <ListBox x:Name="LiveMomentsList"
+                                         MaxHeight="128"
+                                         BorderThickness="0"
+                                         Background="Transparent"
+                                         FontSize="14"
+                                         ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                         AutomationProperties.Name="Live coaching moments list"/>
+                            </DockPanel>
+                        </Border>
+                    </StackPanel>
+                </Border>
+
+                <!-- ════════════════════════════════════
+                     UNIFIED WORKSPACE
+                ════════════════════════════════════ -->
+                <Border Grid.Row="4"
+                        Style="{StaticResource WorkspaceCard}"
+                        Margin="{StaticResource SectionGap}">
+                    <Grid x:Name="WorkspaceSplitGrid">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="6*"/>
+                            <RowDefinition Height="5*"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- ── Compose pane ── -->
+                        <Grid x:Name="TextInputPanel" Grid.Row="0" Margin="0,0,0,10">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <Grid Grid.Row="0" Margin="0,0,0,12">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <StackPanel Grid.Column="0">
+                                    <TextBlock Text="Your message"
+                                               FontSize="17" FontWeight="Bold"
+                                               Foreground="{StaticResource PrimaryBrush}"/>
+                                    <TextBlock Text="Type, paste, or capture with voice — then click Analyze."
+                                               Style="{StaticResource CaptionText}" Margin="0,6,0,0"/>
+                                </StackPanel>
+
+                                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Bottom">
+                                    <Button Content="Analyze text"
+                                            Style="{StaticResource PrimaryButton}"
+                                            AutomationProperties.Name="Analyze the typed message"
+                                            Click="Analyze_Click"/>
+                                    <Button Content="Clear"
+                                            Style="{StaticResource GhostButton}"
+                                            Margin="10,0,0,0"
+                                            AutomationProperties.Name="Clear the message input"
+                                            Click="Clear_Click"/>
+                                </StackPanel>
+                            </Grid>
+
+                            <Border x:Name="InputTextChrome"
+                                    Grid.Row="1"
+                                    CornerRadius="{StaticResource InputRadius}"
+                                    BorderBrush="#CBD5E1" BorderThickness="1"
+                                    Background="#FAFBFC">
+                                <Grid>
+                                    <TextBox x:Name="InputText"
+                                             AcceptsReturn="True" TextWrapping="Wrap"
+                                             VerticalScrollBarVisibility="Auto"
+                                             VerticalContentAlignment="Top"
+                                             Style="{StaticResource ModernTextBox}"
+                                             MinHeight="90" BorderThickness="0" Background="Transparent"
+                                             FontSize="15"
+                                             AutomationProperties.Name="Message input area"
+                                             FontFamily="Segoe UI Variable Text, Segoe UI, Nirmala UI, Latha, Iskoola Pota"/>
+                                    <TextBlock x:Name="InputWatermark"
+                                               Text="Type or paste here — or capture with voice above, then Analyze."
+                                               FontSize="15" Foreground="#94A3B8"
+                                               TextWrapping="Wrap" Margin="16,14,16,14"
+                                               VerticalAlignment="Top"
+                                               IsHitTestVisible="False"/>
+                                </Grid>
+                            </Border>
+
+                            <Border Grid.Row="2"
+                                    Height="1"
+                                    Background="{StaticResource BorderBrush}"
+                                    Margin="0,14,0,0"/>
+                        </Grid>
+
+                        <!-- ── Insights pane ── -->
+                        <DockPanel x:Name="InsightsPanel" Grid.Row="1" Margin="0,4,0,0">
+                            <TextBlock DockPanel.Dock="Top"
+                                       Text="Insights"
+                                       FontSize="17" FontWeight="Bold"
+                                       Foreground="{StaticResource PrimaryBrush}"
+                                       Margin="0,0,0,12"/>
+
+                            <Grid>
+                                <!-- Placeholder (shown before first analysis) -->
+                                <Border VerticalAlignment="Center" HorizontalAlignment="Center"
+                                        MaxWidth="480" CornerRadius="12"
+                                        BorderBrush="#E2E8F0" BorderThickness="1"
+                                        Background="#F8FAFC" Padding="28,24">
+                                    <TextBlock x:Name="ResultsPlaceholder"
+                                               Style="{StaticResource BodyText}"
+                                               Foreground="{StaticResource MutedBrush}"
+                                               TextWrapping="Wrap" TextAlignment="Center"
+                                               Text="Run Analyze text or Analyze voice.&#10;Your score, tone, bias check, and coaching will appear here."/>
+                                </Border>
+
+                                <!-- Results panel -->
+                                <ScrollViewer x:Name="ResultsScrollViewer"
+                                              VerticalScrollBarVisibility="Auto"
+                                              Visibility="Collapsed"
+                                              Padding="0,0,8,0">
+                                    <StackPanel x:Name="ResultsContentPanel" Margin="0,0,0,8">
+
+                                        <!-- Score card -->
+                                        <Border Background="#F1F5F9" CornerRadius="12"
+                                                Padding="24,20" Margin="0,0,0,12"
+                                                BorderBrush="{StaticResource BorderBrush}" BorderThickness="1">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel>
+                                                    <TextBlock Text="Communication score"
+                                                               FontSize="13" Foreground="{StaticResource MutedBrush}"/>
+                                                    <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                                                        <TextBlock x:Name="ScoreText"
+                                                                   FontSize="52" FontWeight="Bold"
+                                                                   Foreground="{StaticResource PrimaryBrush}"
+                                                                   AutomationProperties.Name="Communication score value"/>
+                                                        <TextBlock Text="/100"
+                                                                   FontSize="20" FontWeight="SemiBold"
+                                                                   Foreground="{StaticResource MutedBrush}"
+                                                                   VerticalAlignment="Bottom" Margin="8,0,0,10"/>
+                                                    </StackPanel>
+                                                    <TextBlock x:Name="ScoreLabelText"
+                                                               Style="{StaticResource ResultValueText}"
+                                                               Foreground="{StaticResource TextBrush}"
+                                                               Margin="0,6,0,0"/>
+                                                </StackPanel>
+                                                <Border Grid.Column="1"
+                                                        Width="5" VerticalAlignment="Stretch"
+                                                        Background="{StaticResource AccentBrush}"
+                                                        CornerRadius="3" Margin="18,0,0,0" Opacity="0.9"/>
+                                            </Grid>
+                                        </Border>
+
+                                        <!-- Mood setup -->
+                                        <Border Style="{StaticResource InsightBlock}" Margin="0,0,0,10">
+                                            <StackPanel>
+                                                <TextBlock Text="Mood setup (this run)"
+                                                           Style="{StaticResource SectionTitle}" Margin="0"/>
+                                                <TextBlock x:Name="MoodSetupSummaryText"
+                                                           Style="{StaticResource CaptionText}" Margin="0,6,0,0"/>
+                                            </StackPanel>
+                                        </Border>
+
+                                        <!-- Tone + Language -->
+                                        <Grid Margin="0,0,0,10">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Border Grid.Column="0" Style="{StaticResource InsightBlock}" Margin="0,0,6,0">
+                                                <StackPanel>
+                                                    <TextBlock Text="Dominant tone"
+                                                               FontSize="13" Foreground="{StaticResource MutedBrush}"/>
+                                                    <TextBlock x:Name="ToneText"
+                                                               Style="{StaticResource ResultValueText}" Margin="0,6,0,0"/>
+                                                </StackPanel>
+                                            </Border>
+                                            <Border Grid.Column="1" Style="{StaticResource InsightBlock}" Margin="6,0,0,0">
+                                                <StackPanel>
+                                                    <TextBlock Text="Language"
+                                                               FontSize="13" Foreground="{StaticResource MutedBrush}"/>
+                                                    <TextBlock x:Name="LanguageText"
+                                                               Style="{StaticResource ResultValueText}" Margin="0,6,0,0"/>
+                                                </StackPanel>
+                                            </Border>
+                                        </Grid>
+
+                                        <!-- Bias & fillers -->
+                                        <Border Style="{StaticResource InsightBlock}" Margin="0,0,0,10">
+                                            <StackPanel>
+                                                <TextBlock Text="Bias &amp; fillers"
+                                                           Style="{StaticResource SectionTitle}" Margin="0"/>
+                                                <TextBlock x:Name="BiasText"
+                                                           Style="{StaticResource BodyText}" Margin="0,8,0,0"/>
+                                                <TextBlock x:Name="FillerText"
+                                                           Style="{StaticResource CaptionText}" Margin="0,8,0,0"/>
+                                            </StackPanel>
+                                        </Border>
+
+                                        <!-- Coach feedback -->
+                                        <Border Style="{StaticResource InsightBlock}" Margin="0,0,0,10">
+                                            <StackPanel>
+                                                <TextBlock Text="Coach feedback"
+                                                           Style="{StaticResource SectionTitle}" Margin="0"/>
+                                                <TextBlock x:Name="FeedbackText"
+                                                           Style="{StaticResource BodyText}" Margin="0,8,0,0"/>
+                                            </StackPanel>
+                                        </Border>
+
+                                        <!-- Suggestions -->
+                                        <Border Style="{StaticResource InsightBlock}" Margin="0,0,0,10">
+                                            <StackPanel>
+                                                <TextBlock Text="Suggestions"
+                                                           Style="{StaticResource SectionTitle}" Margin="0"/>
+                                                <TextBlock x:Name="SuggestionsText"
+                                                           Style="{StaticResource BodyText}" Margin="0,8,0,0"/>
+                                            </StackPanel>
+                                        </Border>
+
+                                        <!-- Rephrases -->
+                                        <Border Style="{StaticResource InsightBlock}" Margin="0,0,0,10">
+                                            <StackPanel>
+                                                <TextBlock Text="Output-mood rephrases"
+                                                           Style="{StaticResource SectionTitle}" Margin="0"/>
+                                                <TextBlock x:Name="TargetRephraseText"
+                                                           Style="{StaticResource BodyText}" Margin="0,8,0,0"/>
+                                            </StackPanel>
+                                        </Border>
+
+                                        <!-- Voice timeline -->
+                                        <Border Style="{StaticResource InsightBlock}">
+                                            <StackPanel>
+                                                <TextBlock Text="Voice timeline"
+                                                           Style="{StaticResource SectionTitle}" Margin="0"/>
+                                                <TextBlock Text="Use Speak now or Listen for moment-level coaching."
+                                                           Style="{StaticResource CaptionText}" Margin="0,4,0,8"/>
+                                                <ItemsControl x:Name="TimelineItems"
+                                                              AutomationProperties.Name="Voice coaching timeline"/>
+                                            </StackPanel>
+                                        </Border>
+
+                                    </StackPanel>
+                                </ScrollViewer>
+                            </Grid>
+                        </DockPanel>
+                    </Grid>
+                </Border>
+
+                <!-- ════════════════════════════════════
+                     HISTORY TABS
+                ════════════════════════════════════ -->
+                <TabControl Grid.Row="5"
+                            Margin="0,4,0,0"
+                            MinHeight="210" MaxHeight="360"
+                            Style="{StaticResource WorkspaceTabControl}"
+                            ItemContainerStyle="{StaticResource WorkspaceTabItem}">
+
+                    <!-- Practice sessions -->
+                    <TabItem Header="Practice sessions">
+                        <ListView x:Name="PracticeSessionsList"
+                                  Style="{StaticResource SessionHistoryListView}"
+                                  ItemContainerStyle="{StaticResource SessionHistoryListViewItem}"
+                                  AutomationProperties.Name="Practice sessions history list">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="0,4">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="140"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <StackPanel VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding CreatedAt, StringFormat={}{0:g}}"
+                                                       FontSize="13" FontWeight="SemiBold"
+                                                       Foreground="{StaticResource PrimaryBrush}"/>
+                                            <TextBlock Text="{Binding Scenario}"
+                                                       FontSize="12" Foreground="{StaticResource MutedBrush}"
+                                                       Margin="0,4,0,0" TextTrimming="CharacterEllipsis"/>
+                                        </StackPanel>
+
+                                        <TextBlock Grid.Column="1"
+                                                   Text="{Binding InputPreview}"
+                                                   FontSize="14" Foreground="{StaticResource TextBrush}"
+                                                   TextTrimming="CharacterEllipsis"
+                                                   VerticalAlignment="Center"
+                                                   Margin="16,0" TextWrapping="NoWrap"/>
+
+                                        <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                                            <Border Background="#DCFCE7" CornerRadius="{StaticResource BadgeRadius}"
+                                                    Padding="12,5" Margin="0,0,8,0">
+                                                <TextBlock FontSize="12" FontWeight="SemiBold" Foreground="#166534"
+                                                           Text="{Binding CommunicationScore, StringFormat='Score {0}/100'}"/>
+                                            </Border>
+                                            <Border Background="#F0FDFA" CornerRadius="{StaticResource BadgeRadius}"
+                                                    Padding="12,5">
+                                                <TextBlock Text="{Binding DominantTone}"
+                                                           FontSize="12" FontWeight="SemiBold"
+                                                           Foreground="{StaticResource AccentBrush}"/>
+                                            </Border>
+                                        </StackPanel>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </TabItem>
+
+                    <!-- Analysis history -->
+                    <TabItem Header="Analysis history">
+                        <ListView x:Name="HistoryList"
+                                  Style="{StaticResource SessionHistoryListView}"
+                                  ItemContainerStyle="{StaticResource SessionHistoryListViewItem}"
+                                  AutomationProperties.Name="Analysis history list">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="0,4">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="140"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <StackPanel VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding AnalyzedAt, StringFormat={}{0:g}}"
+                                                       FontSize="13" FontWeight="SemiBold"
+                                                       Foreground="{StaticResource PrimaryBrush}"/>
+                                            <TextBlock Text="Saved analysis"
+                                                       FontSize="12" Foreground="{StaticResource MutedBrush}"
+                                                       Margin="0,4,0,0"/>
+                                        </StackPanel>
+
+                                        <TextBlock Grid.Column="1"
+                                                   Text="{Binding Preview}"
+                                                   FontSize="14" Foreground="{StaticResource TextBrush}"
+                                                   TextTrimming="CharacterEllipsis"
+                                                   VerticalAlignment="Center"
+                                                   Margin="16,0" TextWrapping="NoWrap"/>
+
+                                        <Border Grid.Column="2"
+                                                Background="#F0FDFA"
+                                                CornerRadius="{StaticResource BadgeRadius}"
+                                                Padding="12,5" VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding DominantTone}"
+                                                       FontSize="12" FontWeight="SemiBold"
+                                                       Foreground="{StaticResource AccentBrush}"/>
+                                        </Border>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </TabItem>
+
+                </TabControl>
+            </Grid>
+        </ScrollViewer>
+    </DockPanel>
+</Window>

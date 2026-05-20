@@ -1,0 +1,5 @@
+{
+  "labels": ["neutral", "calm", "happy", "sad", "angry", "fearful", "disgust", "surprised"],
+  "inputSamples": 48000,
+  "sampleRate": 16000
+}

@@ -1,0 +1,12 @@
+[
+  { "text": "I strongly believe we must act now and take full responsibility.", "expectedTone": "Assertive", "scenario": "JobInterview" },
+  { "text": "I understand how difficult this must be for you, and I am truly sorry.", "expectedTone": "Empathetic", "scenario": "Apology" },
+  { "text": "The report shows stable numbers with no major changes this week.", "expectedTone": "Neutral", "scenario": "TeamUpdate" },
+  { "text": "You are completely wrong and this is your fault.", "expectedTone": "Defensive", "scenario": "General" },
+  { "text": "Join us today and discover how this solution can transform your workflow.", "expectedTone": "Persuasive", "scenario": "General" },
+  { "text": "I hear your concern and will make sure we resolve this calmly.", "expectedTone": "Empathetic", "scenario": "CustomerComplaint" },
+  { "text": "We need to move forward with a clear plan and definite next steps.", "expectedTone": "Assertive", "scenario": "TeamUpdate" },
+  { "text": "Thank you for sharing your experience — I appreciate your patience.", "expectedTone": "Empathetic", "scenario": "General" },
+  { "text": "Please consider the benefits of this approach for your team.", "expectedTone": "Persuasive", "scenario": "JobInterview" },
+  { "text": "According to the data summary, results remain within normal range.", "expectedTone": "Neutral", "scenario": "General" }
+]
